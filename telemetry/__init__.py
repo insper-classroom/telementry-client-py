@@ -5,8 +5,10 @@ import configparser
 import webbrowser
 import requests
 import json
+import pathlib
+import os
 
-CONFIG_FILE = "config.ini"
+CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".telemetry.ini")
 
 URL_BASE = "http://3.83.45.177:3000/"
 # URL_BASE = "http://localhost:3000/"
