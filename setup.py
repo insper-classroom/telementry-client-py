@@ -5,7 +5,7 @@ setup(
     version="1.0",
     packages=["telemetry"],
     include_package_data=True,
-    install_requires=["click", "requests", "webbrowser"],
+    install_requires=["click", "requests"],
     entry_points="""
         [console_scripts]
         telemetry=telemetry:cli
