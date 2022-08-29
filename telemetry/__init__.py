@@ -70,7 +70,7 @@ class telemetry:
             print("Wrong token, please check copy and paste")
 
         self.createConfig(token, user)
-        print("Hello %s all set" % user["name"])
+        print("Hello %s" % user["name"])
 
         self.userToken = token
         return True
@@ -97,12 +97,14 @@ def cli(ctx, debug):
     pass
 
 
-@click.group()
-def user():
-    pass
+@click.command()
+def auth():
+    t = telemetry("")
+    if t.auth():
+        print("All set! Configuration ok")
 
 
-cli.add_command(user)
+cli.add_command(auth)
 
 if __name__ == "__main__":
     cli()
