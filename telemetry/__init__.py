@@ -10,7 +10,7 @@ import os
 
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".telemetry.ini")
 
-URL_BASE = "http://3.83.45.177:3000/"
+URL_BASE = "http://3.83.45.177/"
 # URL_BASE = "http://localhost:3000/"
 URL_LOGIN = URL_BASE + "student/login"
 URL_GET_USER = URL_BASE + "student/info?token="
