@@ -21,6 +21,9 @@ class telemetry:
     def __init__(self, courseName):
         self.courseName = courseName
         self.userToken = None
+        self.statusOk = "O"
+        self.statusFail = "F"
+        self.statusNone = "N"
 
     def checkToken(self, token):
         return True if len(token) == 64 else False
@@ -77,7 +80,7 @@ class telemetry:
         self.userToken = token
         return True
 
-    def push(self, log, channel=0):
+    def push(self, log, name="", status="N", channel=0):
         if self.userToken == None:
             self.auth()
 
@@ -85,6 +88,8 @@ class telemetry:
         data["userToken"] = self.userToken
         data["courseName"] = self.courseName
         data["channel"] = channel
+        data["name"] = name
+        data["status"] = status
         data["telemetry"] = log
 
         data_json = json.dumps(data, indent=4)
