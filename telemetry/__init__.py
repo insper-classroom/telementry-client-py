@@ -103,6 +103,9 @@ class telemetry:
         except:
             return None
 
+    def isFromCI(self):
+        return True if os.environ.get("CI") == "CI" else False
+
     def auth(self):
         config = configparser.ConfigParser()
         if config.read(CONFIG_FILE):
@@ -116,7 +119,6 @@ class telemetry:
             except:
                 token = None
         else:
-            breakpoint()
             email = self.getGitEmail()
             breakpoint()
             if email != None:
@@ -181,7 +183,8 @@ class telemetry:
         data["channel"] = channel
         data["name"] = name
         data["status"] = status
-        data["ts"] = time.time()
+        log["CI"] = self.isFromCI()
+        log["ts"] = time.time()
         data["telemetry"] = log
         self.queue.put(data)
 
