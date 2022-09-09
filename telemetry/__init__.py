@@ -7,8 +7,10 @@ import requests
 import json
 import pathlib
 import os
+import pickle
 
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".telemetry.ini")
+QUEUE_FILE = os.path.join(os.path.expanduser("~"), ".telemetry.obj")
 
 URL_BASE = "http://3.83.45.177/"
 # URL_BASE = "http://localhost:3000/"
@@ -17,9 +19,31 @@ URL_GET_USER = URL_BASE + "student/info?token="
 URL_PUSH_DATA = URL_BASE + "student/push"
 
 
+class Queue:
+    def __init__(self, file):
+        self.file = file
+        self.queue = open(self.file)
+
+    def open(self):
+        if os.path.exists(self.file):
+            return pickle.load(self.file)
+        else:
+            return list()
+
+    def put(self, item):
+        self.queue.append(item)
+
+    def read(self):
+        return self.queue.pop(0)
+
+    def dump(self):
+        pickle.dump(self.queue, self.file)
+
+
 class telemetry:
     def __init__(self, courseName):
         self.courseName = courseName
+        self.queue = Queue(QUEUE_FILE)
         self.userToken = None
         self.statusOk = "O"
         self.statusFail = "F"
