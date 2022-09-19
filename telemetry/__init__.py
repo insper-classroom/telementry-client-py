@@ -14,8 +14,8 @@ import time
 CONFIG_FILE = os.path.join(os.path.expanduser("~"), ".telemetry.ini")
 QUEUE_FILE = os.path.join(os.path.expanduser("~"), ".telemetry.obj")
 
-# URL_BASE = "http://3.83.45.177/"
-URL_BASE = "http://localhost:3000/"
+URL_BASE = "http://3.83.45.177:80/"
+#URL_BASE = "http://localhost:3000/"
 URL_LOGIN = URL_BASE + "student/login"
 URL_GET_USER = URL_BASE + "student/info?"
 URL_PUSH_DATA = URL_BASE + "student/push"
@@ -55,7 +55,7 @@ class telemetry:
         self.statusOk = "O"
         self.statusFail = "F"
         self.statusNone = "N"
-        self.TIMEOUT = 5000000000
+        self.TIMEOUT = 5
         signal.signal(signal.SIGALRM, self.interrupted)
 
     def checkToken(self, token):
@@ -83,11 +83,11 @@ class telemetry:
 
     def getStudentFromToken(self, token):
         response = requests.get(URL_GET_USER + "token=" + token, timeout=self.TIMEOUT)
-        if response.status_code != 200:
-            return None
-        else:
+        if response.ok != 200:
             user = json.loads(response.content)
             return user[0]["fields"]
+        else:
+            return None
 
     def getStudentFromEmail(self, email):
         response = requests.get(URL_GET_USER + "email=" + email, timeout=self.TIMEOUT)
@@ -106,7 +106,11 @@ class telemetry:
     def isFromCI(self):
         return True if os.environ.get("CI") == "CI" else False
 
+    def getStudentFromCI(self):
+        return os.environ.get("GITHUB_ACTOR")
+
     def auth(self):
+
         config = configparser.ConfigParser()
         if config.read(CONFIG_FILE):
             try:  # TODO fazer de outra froma
@@ -120,7 +124,6 @@ class telemetry:
                 token = None
         else:
             email = self.getGitEmail()
-            breakpoint()
             if email != None:
                 user = self.getStudentFromEmail(email)
                 if user != None:
